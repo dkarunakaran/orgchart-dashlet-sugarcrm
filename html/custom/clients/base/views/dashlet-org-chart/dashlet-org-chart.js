@@ -47,47 +47,45 @@
      * Called by _renderHtml and loadData.
      */
     renderChart: function() {
-   		var data = {};
-        console.log(data);
     },
 
-	/**
-	* {@inheritDocs}
-	*/
-	loadData: function(options)
-	{
-		options = options || {};
-		var self = this;
-        if(typeof this.model.attributes._module != "undefined"){
-            var apiURL = app.api.buildURL('Contacts/org_chart_data/'+this.model.attributes._module+"/"+this.model.get('id'));
-            app.api.call('read', apiURL, null, {
-                success: _.bind(function(result)
-                {
-                    if(typeof result.content != "undefined"){
+  	/**
+  	* {@inheritDocs}
+  	*/
+  	loadData: function(options)
+  	{
+  		options = options || {};
+  		var self = this;
+          if(typeof this.model.attributes._module != "undefined"){
+              var apiURL = app.api.buildURL('Contacts/org_chart_data/'+this.model.attributes._module+"/"+this.model.get('id'));
+              app.api.call('read', apiURL, null, {
+                  success: _.bind(function(result)
+                  {
+                      if(typeof result.content != "undefined"){
 
-                        // Clear out the current chart before a re-render
-                        self.$('svg#' + self.cid).children().remove();
+                          // Clear out the current chart before a re-render
+                          self.$('svg#' + self.cid).children().remove();
 
-                        // Load data into chart model and set reference to chart
-                        d3.select('svg#' + self.cid)
-                          .datum(result.content)
-                          .transition().duration(500)
-                          .call(self.chart);
-                          self.chart.update();
-                    }
-                }, this),
-                error: function(error)
-                {
-                    app.alert.show("server-error", {
-                        level: 'error',
-                        messages: 'ERR_GENERIC_SERVER_ERROR',
-                        autoClose: false
-                    });
-                    app.error.handleHttpError(error);
-                },
-                complete: options ? options.complete : null
-            });
-        }
-	},
+                          // Load data into chart model and set reference to chart
+                          d3.select('svg#' + self.cid)
+                            .datum(result.content)
+                            .transition().duration(500)
+                            .call(self.chart);
+                            self.chart.update();
+                      }
+                  }, this),
+                  error: function(error)
+                  {
+                      app.alert.show("server-error", {
+                          level: 'error',
+                          messages: 'ERR_GENERIC_SERVER_ERROR',
+                          autoClose: false
+                      });
+                      app.error.handleHttpError(error);
+                  },
+                  complete: options ? options.complete : null
+              });
+          }
+  	},
 
 })
